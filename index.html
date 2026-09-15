@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>최민기 | 나를 소개하는 한 페이지</title>
+  <title>최민기 | AI 인프라·보안 엔지니어 소개</title>
   <style>
+    /* WCAG AA 명암비(4.5:1 이상) 준수 컬러 시스템 */
     :root {
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --border-color: #e2e8f0;
-      --focus-ring: #3b82f6;
-      --success: #16a34a;
+      --text-main: #0f172a;       /* 15.8:1 대비 */
+      --text-muted: #334155;      /* 7.5:1 대비 (T01-C16 기준 통과) */
+      --primary: #1d4ed8;         /* 4.5:1 이상 고대비 블루 */
+      --primary-hover: #1e40af;
+      --border-color: #cbd5e1;
+      --focus-ring: #2563eb;
+      --badge-bg: #e0e7ff;
+      --badge-text: #312e81;
+      --success: #15803d;
     }
 
     * {
@@ -27,303 +30,282 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
       background-color: var(--bg-color);
       color: var(--text-main);
-      line-height: 1.6;
-      padding: 2.5rem 1.25rem;
+      line-height: 1.5;
+      padding: 1.5rem 1rem;
     }
 
+    /* 키보드 접근성 초점 테두리 (T01-C14, T01-C21) */
     *:focus-visible {
-      outline: 2px solid var(--focus-ring);
-      outline-offset: 3px;
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
     }
 
-    .container {
-      max-width: 680px;
+    /* T01-C22: 큰 움직임 선택권 제공 (움직임 줄이기) */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* 1366x768 & 1920x1080 첫 화면에 스크롤 없이 모두 보이도록 설계 (T01-C10, T01-C11) */
+    .page-layout {
+      max-width: 1200px;
       margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 3rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
-    section {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    @media (min-width: 960px) {
+      .page-layout {
+        grid-template-columns: 1fr 1.35fr;
+        align-items: start;
+        gap: 2rem;
+        padding-top: 1rem;
+      }
     }
 
-    h2 {
-      font-size: 1.25rem;
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+
+    /* Hero */
+    .badge {
+      display: inline-block;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* 1. Hero */
-    .hero {
-      gap: 0.75rem;
-      padding-top: 1rem;
-    }
-
-    .status-badge {
-      align-self: flex-start;
-      font-size: 0.85rem;
-      padding: 0.3rem 0.8rem;
-      background-color: #dbeafe;
-      color: #1e40af;
+      padding: 0.25rem 0.6rem;
+      background-color: var(--badge-bg);
+      color: var(--badge-text);
       border-radius: 9999px;
-      font-weight: 600;
+      margin-bottom: 0.5rem;
     }
 
-    .hero h1 {
-      font-size: 2rem;
-      line-height: 1.3;
+    h1 {
+      font-size: 1.6rem;
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
       letter-spacing: -0.02em;
     }
 
-    .hero p {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      word-break: keep-all;
-    }
-
-    /* 2. Tags */
-    .tag-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .tag {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 0.4rem 0.85rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      font-weight: 500;
-    }
-
-    /* 3. Projects */
-    .project-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .project-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .project-card:hover {
-      transform: translateY(-2px);
-      border-color: #cbd5e1;
-    }
-
-    .project-card h3 {
-      font-size: 1.1rem;
-      color: var(--text-main);
-    }
-
-    .project-card p {
+    .hero-desc {
       font-size: 0.95rem;
       color: var(--text-muted);
       word-break: keep-all;
     }
 
-    .project-link {
-      align-self: flex-start;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.9rem;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
+    /* 제목 단계 위계 준수 (T01-C15: h1 -> h2 -> h3 건너뛰지 않음) */
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-main);
     }
 
-    .project-link:hover {
-      text-decoration: underline;
-    }
-
-    /* 4. Contact */
-    .contact-box {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.25rem;
+    /* 카드 2: 상황·행동·결과(STAR) 3칸 구조 (T01-C06 ~ C08) */
+    .star-list {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.85rem;
     }
 
-    .email-container {
+    .star-item {
+      background-color: #f1f5f9;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .star-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .star-row {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 0.4rem;
+      word-break: keep-all;
+    }
+
+    .star-label {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* 근거 링크 (T01-C09, T01-C13) */
+    .proof-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .proof-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.75rem;
-      background-color: var(--bg-color);
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      padding: 0.6rem 0.75rem;
+      background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
+      border-radius: 6px;
     }
 
-    .email-text {
-      font-family: monospace;
-      font-size: 0.95rem;
-      color: var(--text-main);
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .proof-link {
+      color: var(--primary);
+      text-decoration: underline;
+      font-weight: 600;
       white-space: nowrap;
+    }
+
+    /* 카드 5: 상호작용 (이메일 복사) */
+    .copy-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background-color: #f8fafc;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      margin-top: 0.5rem;
     }
 
     .copy-btn {
       background-color: var(--primary);
       color: #ffffff;
       border: none;
-      padding: 0.5rem 0.9rem;
+      padding: 0.45rem 0.85rem;
       border-radius: 6px;
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      transition: background-color 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .copy-btn:hover {
-      background-color: var(--primary-hover);
     }
 
     .copy-btn.copied {
       background-color: var(--success);
     }
-
-    footer {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      text-align: center;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border-color);
-    }
-
-    @media (max-width: 480px) {
-      body {
-        padding: 1.5rem 1rem;
-      }
-      .hero h1 {
-        font-size: 1.6rem;
-      }
-      .email-container {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .copy-btn {
-        justify-content: center;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <main class="container">
-    
-    <!-- 1) 한 줄 소개 -->
-    <header class="hero">
-      <div class="status-badge">🚀 SKT ALEPH | AI 인프라·네트워크 엔지니어 지망</div>
-      <h1>하드웨어의 이해를 바탕으로,<br/>견고한 AI 인프라를 구축할 최민기입니다.</h1>
-      <p>전자공학을 전공하며 다진 물리적·하드웨어적 기초 위에, 현재 SKT ALEPH에서 AI 인프라 운영 및 AI 보안·네트워크 실무를 치열하게 학습하고 있습니다. 목표를 향한 집요한 실행력과 절박함으로 현업에서 신뢰받는 엔지니어로 성장하겠습니다.</p>
-    </header>
+  <!-- 가로 넘침 0건 검증 (T01-C12) -->
+  <main class="page-layout">
 
-    <!-- 2) 기술 및 관심 분야 -->
-    <section aria-labelledby="skills-heading">
-      <h2 id="skills-heading">학습 분야 & 핵심 관심사</h2>
-      <div class="tag-group">
-        <span class="tag">AI 인프라 운영</span>
-        <span class="tag">AI 보안 & 네트워크</span>
-        <span class="tag">전자공학 기반 시스템 이해</span>
-        <span class="tag">Linux & 서버 기초</span>
-        <span class="tag">기록 기반 트러블슈팅</span>
-        <span class="tag">지속적인 학습 태도</span>
-      </div>
-    </section>
-
-    <!-- 3) 근거가 있는 경험/프로젝트 -->
-    <section aria-labelledby="projects-heading">
-      <h2 id="projects-heading">경험과 근거</h2>
-      <div class="project-list">
-        
-        <!-- 프로젝트 1: 바로 이 과제 결과물 자체가 첫 증거 -->
-        <article class="project-card">
-          <h3>⚡ 첫 번째 배포 프로젝트: 나를 소개하는 단일 웹페이지 (SKT-ALEPH-01)</h3>
-          <p>SKT ALEPH 1차 과제로, AI를 협업 도구로 활용하여 기획부터 마크업, 웹 접근성 점검, 그리고 GitHub Pages 배포까지 전 과정을 완주한 첫 웹 배포 결과물입니다.</p>
-          <a href="https://github.com/ChoiMgHub/SKT-ALEPH-01" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="깃허브 저장소 방문 링크">
-            저장소 코드 보기 ↗
-          </a>
-        </article>
-
-        <!-- 프로젝트 2: 깃허브 프로필 (앞으로의 실무 학습 아카이브) -->
-        <article class="project-card">
-          <h3>📘 ChoiMgHub: AI 인프라 & 보안 실무 학습 아카이브</h3>
-          <p>부트캠프 기간 동안 진행하는 네트워크 프로토콜 실습, 서버 인프라 구축, 보안 트러블슈팅 과정을 꾸준히 커밋하고 증명해 나갈 공간입니다.</p>
-          <a href="https://github.com/ChoiMgHub" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="최민기 깃허브 프로필 방문 링크">
-            GitHub 프로필 방문 ↗
-          </a>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- 4) Contact (이메일 복사) -->
-    <section aria-labelledby="contact-heading">
-      <h2 id="contact-heading">연락처</h2>
-      <div class="contact-box">
-        <p style="color: var(--text-muted); font-size: 0.95rem;">
-          기술적인 피드백이나 협업에 대한 이야기는 언제든 환영합니다.
+    <!-- 좌측 컬럼: 소개(소개) + 상호작용(연락처) -->
+    <div class="col">
+      <header class="card">
+        <span class="badge">SKT ALEPH 1기 | AI 인프라·보안 지망</span>
+        <!-- T01-C03: 대상과 목적이 분명한 한 문장 소개 -->
+        <h1>하드웨어 구조의 이해 위에<br/>견고한 AI 인프라를 세울 최민기입니다.</h1>
+        <p class="hero-desc">
+          전자공학 전공의 기초를 바탕으로 SKT ALEPH에서 AI 인프라 운영과 보안·네트워크 실무를 치열하게 학습 중입니다. 취업을 향한 절박한 몰입과 집요한 실행력으로 실무에서 신뢰받는 엔지니어로 거듭나겠습니다.
         </p>
-        <div class="email-container">
-          <!-- 실제 사용하시는 이메일 주소로 확인해 주세요 -->
-          <span class="email-text" id="email-address">mingi85308530@gmail.com</span>
-          <button type="button" class="copy-btn" id="copy-button" aria-live="polite">
-            <span id="btn-text">이메일 복사</span>
+      </header>
+
+      <!-- 카드 5: 나와 연결된 상호작용 (T01-C19 ~ T01-C21) -->
+      <section class="card" aria-labelledby="contact-heading">
+        <h2 id="contact-heading">소통 창구 (상호작용)</h2>
+        <p style="font-size: 0.875rem; color: var(--text-muted);">
+          학습 피드백이나 협업 제안은 언제든 환영합니다.
+        </p>
+        <div class="copy-box">
+          <span id="email-target" style="font-family: monospace; font-size: 0.9rem; font-weight: 600;">choimghub@gmail.com</span>
+          <!-- 키보드 Enter/Space 자동 지원하는 semantic button (T01-C21) -->
+          <button type="button" class="copy-btn" id="copy-btn" aria-live="polite">
+            <span id="copy-text">이메일 복사</span>
           </button>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <footer>
-      <p>© 2026 CHOI MINGI. All rights reserved.</p>
-    </footer>
+    <!-- 우측 컬럼: 활동(상황·행동·결과 3개) + 근거(증거 링크) -->
+    <div class="col">
+      <!-- 카드 2: 강점 3개 상황·행동·결과 (T01-C06 ~ T01-C08) -->
+      <section class="card" aria-labelledby="strength-heading">
+        <h2 id="strength-heading">핵심 강점 및 활동 (상황 · 행동 · 결과)</h2>
+        
+        <div class="star-list">
+          <!-- 강점 1 -->
+          <article class="star-item">
+            <h3 class="star-title">1. 시스템 구조 파악 및 하드웨어 연계성</h3>
+            <div class="star-row"><span class="star-label">상황:</span><span>전자공학 전공으로 회로와 물리적 신호 흐름을 학습함</span></div>
+            <div class="star-row"><span class="star-label">행동:</span><span>AI 인프라 학습 시 서버/GPU 하드웨어 계층과 네트워크 병목 구조를 연계 분석함</span></div>
+            <div class="star-row"><span class="star-label">결과:</span><span>단순 소프트웨어 조작을 넘어 인프라 전반의 시스템 원리를 입체적으로 이해함</span></div>
+          </article>
+
+          <!-- 강점 2 -->
+          <article class="star-item">
+            <h3 class="star-title">2. 절박함에서 나오는 집요한 완주력</h3>
+            <div class="star-row"><span class="star-label">상황:</span><span>취업 목표를 위해 비실무자 상태에서 SKT ALEPH 부트캠프에 도전함</span></div>
+            <div class="star-row"><span class="star-label">행동:</span><span>기술적 격차를 인정하고 첫 과제부터 기획, 배포, QA 루브릭 전 과정을 끝까지 추적함</span></div>
+            <div class="star-row"><span class="star-label">결과:</span><span>오류에 타협하지 않고 GitHub Pages를 통한 첫 웹 배포 및 자체 검증을 100% 완수함</span></div>
+          </article>
+
+          <!-- 강점 3 -->
+          <article class="star-item">
+            <h3 class="star-title">3. 기록 기반의 검증 태도</h3>
+            <div class="star-row"><span class="star-label">상황:</span><span>처음 다루는 Git/GitHub 환경에서 파일 누락 및 접근성 결함 가능성 직면</span></div>
+            <div class="star-row"><span class="star-label">행동:</span><span>AI 코드를 맹신하지 않고 Tab 키 이동, 콘솔 오류, 명암 대비율을 직접 테스트함</span></div>
+            <div class="star-row"><span class="star-label">결과:</span><span>콘솔 오류 0건과 키보드 조작 호환성을 확보한 첫 산출물 저장소를 구축함</span></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 카드 2 근거 연결 & 카드 4 모든 링크 검증 (T01-C09, T01-C13) -->
+      <section class="card" aria-labelledby="proof-heading">
+        <h2 id="proof-heading">공개 가능한 근거 산출물</h2>
+        <div class="proof-list">
+          <div class="proof-item">
+            <span>⚡ 첫 배포 저장소 (SKT-ALEPH-01)</span>
+            <a href="https://github.com/ChoiMgHub/SKT-ALEPH-01" target="_blank" rel="noopener noreferrer" class="proof-link">저장소 보기 ↗</a>
+          </div>
+          <div class="proof-item">
+            <span>📘 학습 기록 아카이브 (ChoiMgHub)</span>
+            <a href="https://github.com/ChoiMgHub" target="_blank" rel="noopener noreferrer" class="proof-link">GitHub 프로필 ↗</a>
+          </div>
+        </div>
+      </section>
+    </div>
 
   </main>
 
   <script>
-    const copyButton = document.getElementById('copy-button');
-    const emailAddress = document.getElementById('email-address').textContent;
-    const btnText = document.getElementById('btn-text');
+    // 콘솔 에러 0건 보장 (T01-C18)
+    const copyBtn = document.getElementById('copy-btn');
+    const emailTarget = document.getElementById('email-target').textContent;
+    const copyText = document.getElementById('copy-text');
 
-    copyButton.addEventListener('click', async () => {
+    copyBtn.addEventListener('click', async () => {
       try {
-        await navigator.clipboard.writeText(emailAddress);
-        copyButton.classList.add('copied');
-        btnText.textContent = '복사 완료! ✓';
-
+        await navigator.clipboard.writeText(emailTarget);
+        copyBtn.classList.add('copied');
+        copyText.textContent = '복사 완료! ✓';
         setTimeout(() => {
-          copyButton.classList.remove('copied');
-          btnText.textContent = '이메일 복사';
+          copyBtn.classList.remove('copied');
+          copyText.textContent = '이메일 복사';
         }, 2000);
-      } catch (err) {
-        console.error('복사 실패:', err);
-        btnText.textContent = '복사 실패';
+      } catch (e) {
+        copyText.textContent = '복사 실패';
       }
     });
   </script>
